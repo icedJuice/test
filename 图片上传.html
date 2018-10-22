@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	</head>
+	<style type="text/css">
+		.input{
+			min-height: 400px;
+			background-color: #CCCCCC;
+		}
+	</style>
+	<body>
+		
+		<div class="form">
+			选择图片：<br />
+			<input type="file" id="imgIpt" />
+		</div>
+		<div class="input" id="divIpt" contenteditable="true">
+			
+		</div>
+		
+		<button id="upbtn">上传</button>
+		
+		
+		<script type="text/javascript">
+			
+			
+			var divIpt = document.getElementById('divIpt');
+			
+		</script>
+		
+		
+		<script type="text/javascript">
+			var imgIpt = document.getElementById('imgIpt');
+			function callbackbody(data) {
+				console.log('callback');
+			}
+			imgIpt.onchange = function (event) {
+				console.log('选择图片的input变了');
+				console.log(imgIpt.files)
+			}
+			function initUpload() {
+				console.log(imgIpt.value);
+				$.ajax({
+					type:"post",
+					data: {token: 'e22ef860c3ce11e8a1fb00163e03408a'},
+					url: "http://47.93.241.33:12300/api/v1/feed/policy",
+					async:true
+				}).done(function (data) {
+					var data = data;
+					var formData = new FormData();
+					var ikey = 'web/img_' + Math.round(Math.random()*10000) + '.jpg';
+//					formData.append('name', imgIpt.value.split('\')[2]);
+					formData.append('key', ikey);
+					formData.append('policy', data.data.policy);
+					formData.append('OSSAccessKeyId', data.data.accessid);
+					formData.append('success_action_status', 200);
+					formData.append('signature', data.data.signature);
+					formData.append('file', imgIpt.files[0]);
+					
+					$.ajax({
+						type:"POST",
+						url:"https://goingo-picture.oss-cn-beijing.aliyuncs.com/",
+						data: formData,
+						cache: false,
+						processData: false,
+						contentType: false,
+						async:true
+					}).done(function (data) {
+						console.log('图片传送结束');
+						console.log(data);
+						
+					});
+				});
+				
+				
+//name: v2-0e2c61eae1f47a24a0e173d36b8ee14e_1200x500.jpg
+//key: web/AdRe2j2yka.jpg
+//policy: eyJleHBpcmF0aW9uIjoiMjAxOC0wOS0yOVQxMDo1OTozMS4xNDVaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF0sWyJzdGFydHMtd2l0aCIsIiRrZXkiLCJ3ZWIvIl1dfQ==
+//OSSAccessKeyId: LTAIwXqbcRrO4de7
+//success_action_status: 200
+//signature: HErZ6kIkJOKaxqX2nPU/tlwesxM=
+//file: (binary)
+			}
+			
+			document.getElementById('upbtn').onclick = initUpload;
+		</script>
+	</body>
+</html>

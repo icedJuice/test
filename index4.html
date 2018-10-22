@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+	
+	<script type="text/javascript">
+		
+window.onload = function (){
+	$.ajax({
+		type:'post',
+		url: 'https://api.ono.chat/api/v1/feed/policy',
+		data:{
+			token: '11111'
+		}
+	}).done(function (data){
+		console.log(data)
+	})
+	
+	
+}
+		
+		
+		
+		
+		
+		
+	</script>
+	
+</body>
+</html>

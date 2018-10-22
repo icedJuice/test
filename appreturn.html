@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
+	</head>
+	<body>
+		<input id="ipt" type="search" placeholder="要存的信息" /> <br />
+		<button id="store">存信息</button><br />
+		<button id="fetch">取信息</button><br />
+		<div id="text">
+			
+		</div>
+		
+		<script type="text/javascript">
+			window.onload = function () {
+//				new vconsole();
+			}
+function JS__msgStore(key, value) {
+	console.log('JS__msgStore')
+    if (/android/i.test(navigator.userAgent)) {
+        try {
+            window.android.JS__msgStore(key, value)
+        } catch (e) {
+            console.log(e)
+        }
+    } else if (/ios|iphone|ipod|pad/i.test(navigator.userAgent)) {
+        try {
+            window.webkit.messageHandlers.JS__msgStore.postMessage({key, value})
+        } catch (e) {
+            console.log(e)
+        }
+    }
+}
+			
+function JS__msgFetch(key) {
+	console.log('JS__msgFetch')
+    if (/android/i.test(navigator.userAgent)) {
+        try {
+            window.android.JS__msgFetch(key)
+        } catch (e) {
+            console.log(e)
+        }
+    } else if (/ios|iphone|ipod|pad/i.test(navigator.userAgent)) {
+        try {
+            window.webkit.messageHandlers.JS__msgFetch.postMessage({key})
+        } catch (e) {
+            console.log(e)
+        }  
+    }
+}
+
+
+
+var textBox = document.getElementById('text');
+var texts = '';
+var ipt = document.getElementById('ipt');
+var storeBtn = document.getElementById('store');
+var fetchBtn = document.getElementById('fetch');
+var storeKey = 'searchHistory';
+
+window.JS__msgFetchGet = function (value) {
+	alert('JS__msgFetchGet');
+//	alert('JS__msgFetchGet\nvalue=' + value );
+    showMsg('----> fetchResult: @key=' + storeKey + '&@value=' + value + '<br/>' );
+}
+
+
+function showMsg (value) {
+	texts += value;
+	textBox.innerHTML = texts;
+}
+			
+
+
+storeBtn.onclick = function () {
+	var t = ipt.value;
+	showMsg('----> storeMsg: @key=' + storeKey + '&@value=' + t + '<br/>' );
+	
+	JS__msgStore(storeKey, t);
+	
+	showMsg('----> storeMsg storeded <br/>');
+}
+fetchBtn.onclick = function () {
+	showMsg('----> fetchMsg: @key=' + storeKey + '<br/>' );
+	JS__msgFetch(storeKey)
+	showMsg('----> fetchMsg fetched <br/>----> waitting for fetch callback <br/>' );
+}
+			
+		</script>
+	</body>
+</html>

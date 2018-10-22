@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style type="text/css">
+		
+	</style>
+	<body>
+		
+		
+	<button id=imgBtn>选择图片</button>
+	<div class="previewframe" id="previewframe">
+		
+	</div>
+	<script type="text/javascript">
+		
+		function MinLoad () {
+			var self = this;
+			this.defaultConfig = {
+				imgBtnId: 'imgBtn',
+				process: true,
+				filter: ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+				previewFrameId: '',
+				single: true, // 只能选择单张
+				prefix: 'minload', // 图片名前缀
+				hash: true, // 是否使用随机名称
+				hashLength: 7, // 启用随机名称时使用，制定随机名称长度，
+				// 获取上传签名 需要的参数
+				tokenParam: {
+					type: '',
+					data: '',
+					url: '',
+					async: true,
+					effective: 180 // 有效时长（s）
+				}
+			};
+			
+			this._onuploadstart = function () {} // 当上传开始时
+			this._onerror = function () {}; // 当出错的时候
+			this._onsuccess = function () {}; // 当完成的时候
+			this._onprosess = function () {}; // 传输进度每  0.2s 更新一次
+			this._onuploadend = function () {}; // 传输完成
+			
+			this.uploadParam = {};
+			if(arguments[0]) {
+			   for (var p in arguments[0]) {
+			        if (this.defaultConfig.hasOwnProperty(p)) {
+			        	this.defaultConfig[p]=arguments[0][p];
+			        }
+			   }
+			}
+			this.imgFileIpt = null;
+			
+			
+			this.imgBtn = document.getElementById(this.defaultConfig.imgBtnId);
+			
+			
+			this.imgBtn.onclick = function () {
+				if (!self.imgFileIpt) {
+					var attrs = {type: 'file', style: 'display:none;', 'accept': 'image/jpg, image/jpeg, image/png' };
+					if (!self.defaultConfig) {
+						attrs.multiple = 'true';
+					}
+					self.imgFileIpt = self.createDom('input', attrs);
+					self.imgFileIpt.onchange = function () {
+						self.uploadFlieEntry( self.imgFileIpt.files );
+					}
+				}
+				self.imgFileIpt.click();
+			}
+			
+			
+			
+			this.uploadFlieEntry = function ( files ) {
+				console.log(files[0]);
+				var _this = this;
+				var reader = new FileReader();
+				
+				reader.addEventListener("load", function () {
+				    var img = new Image();
+				    img.src = reader.result;
+				    document.getElementById(_this.defaultConfig.previewFrameId).appendChild(img);
+				}, false);
+				
+				reader.readAsDataURL(files[0]);
+				if (this.defaultConfig.single) {
+					var hash = '';
+					
+					if (this.defaultConfig.hash) {
+						// 此处生成固定长度hash串算法, 有待完善
+						hash = Math.round(Math.random() * 10000000);
+					} else {
+						// 此处使用随机数替代hash
+						hash = Math.round(Math.random() * 10000000);
+					}
+					
+					var imgName = this.defaultConfig.prefix + hash + '.' + files[0].type.toLowerCase().replace('image/', '');
+					
+					console.log(imgName)
+				}
+			}
+		}
+		MinLoad.prototype.getUploadToken = function (param, callback) {
+			
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function () {
+				if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+					console.log(xhr.response)
+					if (callback) {
+						callback(xhr.response);
+					}
+				}
+			}
+			xhr.open(param.type, param.url, param.async);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			var data = '';
+			if (param.data) {
+				for ( var i in param.data) {
+					data += i + '=' + param.data[i] + '&';
+				}
+				data = data.replace(/&$/, '');
+			}
+			xhr.send(data);
+		}
+		
+		MinLoad.prototype.createDom = function (domName, attrObj) {
+			if (arguments.length === 0) return false;
+			var d = document.createElement(domName);
+			var n = 'MinLoadDomName' + Math.round(Math.random() * 1000000);
+			if (attrObj) {
+				for (var i in attrObj) {
+					d.setAttribute(i, attrObj[i]);
+				}
+			}
+			d.setAttribute('name', n);
+			document.getElementsByTagName('body')[0].appendChild(d);
+			return document.getElementsByName(n)[0];
+		}
+		
+		
+		
+		
+		
+		
+		var upload = new MinLoad({
+			previewFrameId: 'previewframe'
+		})
+		
+		
+		
+		MinLoad.prototype.getUploadToken({
+			type:"post",
+			data: {token: 'e22ef860c3ce11e8a1fb00163e03408a'},
+			url: "http://47.93.241.33:12300/api/v1/feed/policy",
+			async:true
+		}, function (data) {
+			console.log(data);
+		})
+		
+	</script>
+	
+	
+		
+	</body>
+</html>

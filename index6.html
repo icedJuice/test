@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+	<script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js" type="text/javascript"></script>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<style type="text/css">
+	body{font-size: 30px;}
+</style>
+<body>
+	
+	<div id="div">
+		
+	</div>
+	
+	
+	<script type="text/javascript">
+		
+		var div = document.getElementById('div');
+		
+		var texts = '';
+		
+		var _url = window.location.href;
+		
+		var isIos = /ios|iphone|ipad|ipod/i.test(navigator.userAgent)
+		
+		setTimeout(function (){
+			var state = {title:'',url:window.location.href.split('?')[0]};
+			history.pushState(state,'',window.location.href.split('?')[0] +'?t=aaa');
+			setShareMsg()
+		},3000)
+		
+		
+		texts += ('ios:' + isIos)
+		
+		
+		
+		var t_url = '';
+		
+		
+		function setShareMsg(){
+			
+			t_url = _url
+			
+			texts += (' t_url: ' + t_url)
+			
+			div.innerHTML = texts;
+			
+			alert(t_url)
+		
+			$.ajax({
+				type:"get",
+				url:"https://api.ono.chat/api/v1/share/get_token?url=" + t_url,
+				async:true
+			}).done(function (data){
+				wx.config({
+				    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				    appId: 'wxadd1f08bb1406b3e', // 必填，公众号的唯一标识
+				    timestamp: data.data.timestamp, // 必填，生成签名的时间戳
+				    nonceStr: data.data.noncestr, // 必填，生成签名的随机串
+				    signature: data.data.signature,// 必填，签名
+				    //jsApiList: [] // 必填，需要使用的JS接口列表
+				    jsApiList: [
+				        'onMenuShareTimeline',
+				        'onMenuShareAppMessage',
+				        'onMenuShareQQ',
+				        'onMenuShareWeibo',
+				        'onMenuShareQZone'
+				    ]
+				});
+				wx.ready(function(){
+				    var options = {
+				        title   : '我是来做测试的', 
+				        desc    : '我是测试描述',
+				        link    : window.location.href,
+				        imgUrl  : 'http://www.hanguozhi.com/test/ss.jpg',
+				        trigger :   function (res) {},
+				        success :   function (res) {},
+				        cancel  :   function (res) {},
+				        fail    :   function (res) {}
+				    };
+				    wx.onMenuShareTimeline(options); //分享到朋友圈
+				    wx.onMenuShareAppMessage(options); //分享给朋友
+				    wx.onMenuShareQQ(options); //分享给qq
+				    wx.onMenuShareWeibo(options); //分享给微博
+				    wx.onMenuShareQZone(options); //分享给空间
+				});
+			});
+		
+		}
+		
+		
+		
+	</script>
+	
+</body>
+</html>

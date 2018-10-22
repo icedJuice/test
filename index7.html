@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+</head>
+	<style>
+
+</style>
+<body>
+
+
+<div class="" id="dataapp">
+    <div class="weui-cells weui-cells_form stmain">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">名称<span style="color: red">*</span></label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="啥东西" v-model="item.comName">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">产地<span style="color: red">*</span></label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="啥产地" v-model="item.comAddress">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">品牌</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="啥牌子" v-model="item.comBrand">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">价格</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="number" placeholder="多少钱" v-model="item.comPrice">
+            </div>
+        </div>
+
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__hd">
+                        <p class="weui-uploader__title">图片上传<span style="color: red">*</span></p><span  class="weui-cells__title">(长啥样)最少一张 最多五张</span>
+                    </div>
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files" id="uploaderFiles">
+                            <li style="width: 118px; height: 118px;"  v-for="pic in pics" class="weui-uploader__file"  v-bind:style="{backgroundImage: 'url(' + pic.url80 + ')'}"></li>
+                        </ul>
+                        <div class="weui-uploader__input-box">
+                            <div  v-show="pics.length<5"  class="weui-uploader__input"  v-on:click="startIdFrontage()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shop-nav" style="display: block;">
+        <div class="js-navmenu js-footer-auto-ele shop-nav nav-menu nav-menu-1 has-menu-2">
+            <div class="nav-special-item">
+                <a class="home">主页</a>
+            </div>
+            <div class="nav-items-wrap">
+                <div class="nav-item">
+                    <a class="mainmenu js-mainmenu">
+                        <span class="mainmenu-txt" v-on:click="save()">保存</span>
+                    </a>
+                </div>
+            </div>
+            <div class="nav-items-wrap">
+                <div class="nav-item">
+                    <a class="mainmenu js-mainmenu">
+                        <span class="mainmenu-txt" v-on:click="goback()">返回</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%--<div class="weui-flex SubmitForm">
+        <div class="weui-flex__item"><div style="margin: 10px" v-on:click="save()" class="weui-btn  weui-btn_primary">保存</div></div>
+        <div class="weui-flex__item"><div style="margin: 10px" v-on:click="goback()" class="weui-btn  weui-btn_primary">返回</div></div>
+    </div>--%>
+</div>
+</div>
+
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js" charset="utf-8"></script>
+
+<script>
+    var dataApp = new Vue({
+        el: '#dataapp',
+        data: {
+            //编辑的数据
+            item: {
+                id: "",
+                comName: "",//啥东西
+                comAddress: "",//啥产地
+                comBrand: "",//品牌
+                comPrice: 0,//价格
+                comPic1Url: ""//第一张图片
+            },
+            pics:[]
+        },
+        methods: {
+            startIdFrontage:function () {
+                startCapture();
+            },
+            goback: function () {
+                location.href = '/';/*wcp/pre_rec/list*/
+            },
+            save: function () {
+                var item = this.item;
+                if (mobile.isEmpty(item.comName)) {
+                    alert('名称不能为空!');
+                    return;
+                }
+                if (mobile.isEmpty(item.comAddress)) {
+                    alert('产地不能为空!');
+                    return;
+                }
+                var picIdList = [];
+                for (var i = 0; i < this.pics.length; i++) {
+                    var pic = this.pics[i];
+                    picIdList.push(pic.id);
+                }
+
+                var data = {
+                    comName: item.comName,
+                    comAddress: item.comAddress,
+                    comBrand: item.comBrand,
+                    comPrice: item.comPrice,
+                    comPicList: picIdList
+                };
+                callServerPort("保存优选", 'business.wcp.saveRecommendCommodities', data, function (data) {
+                    if (data.success) {
+                        location.href = '/wcp/pre_rec/list';
+                        return;
+                    }
+                    throw data.msg;
+                });
+            }
+        }
+    });
+
+
+
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: '${jsApiSign.appID}', // 必填，公众号的唯一标识
+        timestamp: '${jsApiSign.timestamp}', // 必填，生成签名的时间戳
+        nonceStr: '${jsApiSign.nonceStr}', // 必填，生成签名的随机串
+        signature: '${jsApiSign.signature}',// 必填，签名
+        jsApiList: ['chooseImage','uploadImage'] // 必填，需要使用的JS接口列表
+    });
+
+    var isSDKReady = false;
+    wx.ready(function(){
+        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，
+        // config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。
+        // 对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+
+        isSDKReady = true;
+        $.hideLoading();
+    });
+    wx.error(function(res){
+        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，
+        // 也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+        alert('JsApiJDK 签名验证异常');
+        $.hideLoading();
+    });
+    //开始拍照
+    function startCapture() {
+        if(!isSDKReady){
+            alert("拍照SDK正在初始化，稍后重试");
+            return;
+        }
+        wx.chooseImage({
+            count: 1, // 默认9
+            //sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sizeType: ['original'],
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                $.showLoading();
+                wx.uploadImage({
+                    localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                    success: function (res) {
+                        var serverId = res.serverId; // 返回图片的服务器端ID
+                        getCropImageAnalyzeInfo(serverId);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 获得服务端
+     */
+    function getCropImageAnalyzeInfo(mediaID) {
+        var data = {
+            mediaID: mediaID,
+            url: location.href,
+            fileName: mediaID + ".jpg"
+        };
+        callServerPort("获取照片异常", 'system.foundation.Attach.downloadAttachFromWechat', data, function (data) {
+            if (data.success) {
+                dataApp.pics.push({
+                    url80:data.data.mediaAttachInfo.mediaUrl+  "&zow=80",
+                    url:data.data.mediaAttachInfo.mediaUrl,
+                    id:data.data.mediaAttachInfo.fileID
+                });
+                return;
+            }
+            throw data.msg;
+        });
+    }
+</script>
+</body>
+</html>
