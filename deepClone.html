@@ -9,13 +9,13 @@
 			
 			function deepClone (o) {
 				if (!(o instanceof Array || o instanceof Object)) return o;
-				var obj = o instanceof Array ? [] : {};
-				for (var item in o) {
-					if (o.hasOwnProperty(item)) {
-						obj[item] = deepClone(o[item]);
+				var j = o instanceof Array ? [] : {};
+				for (var i in o) {
+					if (o.hasOwnProperty(i)) {
+						j[i] = deepClone(o[i]);
 					}
 				}
-				return obj;
+				return j;
 			}
 			
 			var obj = {
