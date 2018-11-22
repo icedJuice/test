@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+		
+		<script type="text/javascript">
+			
+			
+//			var spanArr = Array.prototype.slice.apply(document.getElementsByTagName('span'))
+			
+			var spanArr2 = document.getElementsByTagName('span');
+			
+			Array.prototype.forEach.call(spanArr2, function (item, index) {
+				
+				console.log(item);
+				
+			})
+			
+			
+			function fn () {
+				console.log(arguments);
+				
+				
+				var a = Array.prototype.slice.call(arguments)
+				console.log(a)
+			}
+			
+			
+			
+			
+			fn('小华', '', 100)
+			
+			
+			var arr4 = [8,9,1,8,6,5,2,7]
+			
+			function maopao (arr) {
+				if (! arr instanceof Array) return false;
+				for (var i = arr.length; i > 0; i --) {
+					for (var j=0; j < i; j ++) {
+						if (arr[j] > arr[j+1]) {
+							arr[j] = [arr[j+1], arr[j+1] = arr[j]][0];
+						}
+					}
+				}
+				return arr;
+			}
+			console.log(maopao(arr4))
+			
+		</script>
+		
+	</body>
+</html>
