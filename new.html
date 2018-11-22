@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<script type="text/javascript">
+			
+			
+//			function _new () {
+//				// 传入的第一个参数为要实例化的对象， 紧接着的参数会被传入实例化后的实例中
+//				var fn = Array.prototype.shift.call(arguments);
+//				var obj = {};
+//				obj.__proto__ = fn.prototype;
+//				fn.apply(obj, arguments);
+//				return obj;
+//			}
+//			
+		
+			function _new () {
+				var f = Array.prototype.shift.call(arguments);
+				var o = Object.create(f.prototype);
+				f.apply(o, arguments);
+				return o;
+			}
+			
+			function Pers (name, age) {
+				this.name = name;
+				this.age = age;
+				this.speak = function () {
+					console.log(this.name);
+				}
+			}
+			
+			var p2 = _new(Pers, 'xiaohua', 100);
+			
+			console.log(p2);
+			
+			p2.speak();
+			
+			
+			
+			
+			
+		</script>
+	</body>
+</html>
