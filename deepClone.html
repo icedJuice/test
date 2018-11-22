@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			
+			function deepClone (o) {
+				if (!(o instanceof Array || o instanceof Object)) return o;
+				var obj = o instanceof Array ? [] : {};
+				for (var item in o) {
+					if (o.hasOwnProperty(item)) {
+						obj[item] = deepClone(o[item]);
+					}
+				}
+				return obj;
+			}
+			
+			var obj = {
+				name: 'zhangsan',
+				age: 24,
+				loves: {
+					git: 80,
+					nodes: 70,
+					js: {
+						es5: 80,
+						es6: 70
+					}
+				},
+				likes: ['css', 'html', {es5: 80, es6: 70}]
+			}
+			
+			
+			var obj2 = deepClone(obj);
+			
+			console.log(obj2)
+			obj.name = '李四';
+			obj.likes[0] = 'csssss';
+			obj.loves.js.es6 = 100;
+			
+			console.log(obj);
+			console.log(obj2);
+			
+		</script>
+	</body>
+</html>
