@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<script type="text/javascript">
+			
+			var objsource = {
+				name: 'xiaohua',
+				age: 24,
+				loves: {
+					git: 80,
+					nodes: 70,
+					js: {
+						es5: 80,
+						es6: 70
+					}
+				},
+				likes: ['css', 'html', {es5: 80, es6: 70}]
+			}
+			
+			var obj1 = Object.assign({}, objsource);
+			
+			objsource.age = 100;
+			
+			console.log(obj1);
+			
+			
+			
+			
+			
+			
+		</script>
+		
+	</body>
+</html>

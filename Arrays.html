@@ -19,41 +19,64 @@
 			
 //			var spanArr = Array.prototype.slice.apply(document.getElementsByTagName('span'))
 			
-			var spanArr2 = document.getElementsByTagName('span');
-			
-			Array.prototype.forEach.call(spanArr2, function (item, index) {
-				
-				console.log(item);
-				
-			})
-			
-			
-			function fn () {
-				console.log(arguments);
-				
-				
-				var a = Array.prototype.slice.call(arguments)
-				console.log(a)
-			}
-			
-			
-			fn('小华', '', 100)
-			
-			
+//			var spanArr2 = document.getElementsByTagName('span');
+//			
+//			Array.prototype.forEach.call(spanArr2, function (item, index) {
+//				
+//				console.log(item);
+//				
+//			})
+//			
+//			
+//			function fn () {
+//				console.log(arguments);
+//				
+//				
+//				var a = Array.prototype.slice.call(arguments)
+//				console.log(a)
+//			}
+//			
+//			
+//			fn('小华', '', 100)
+//			
+//			
 			var arr4 = [8,9,1,8,6,5,2,7]
+//			
+//			function maopao (arr) {
+//				if (! arr instanceof Array) return false;
+//				for (var i = arr.length; i > 0; i --) {
+//					for (var j=0; j < i; j ++) {
+//						if (arr[j] > arr[j+1]) {
+//							arr[j] = [arr[j+1], arr[j+1] = arr[j]][0];
+//						}
+//					}
+//				}
+//				return arr;
+//			}
+//			console.log(maopao(arr4))
 			
-			function maopao (arr) {
-				if (! arr instanceof Array) return false;
-				for (var i = arr.length; i > 0; i --) {
-					for (var j=0; j < i; j ++) {
-						if (arr[j] > arr[j+1]) {
-							arr[j] = [arr[j+1], arr[j+1] = arr[j]][0];
-						}
+			var arr5 = [1,2,3,4,5,6,7,8,9];
+			var arr6 = [1, {name: '000'},null, 3, 4,'', undefined, 5, 6, 7, 8, 9];
+
+//			console.log(arr5.slice(4, -1));
+//			var arr7 = arr6.filter(function (item) {
+//				return item != null && item !== '';
+//			})
+//			arr6[1].name = '111'
+//			console.log(arr7)
+//			
+			Array.prototype. = function () {
+				var len = this.length;
+				for (var i = 0; i < len; i ++) {
+					if (this[i] == null || this[i] === '') {
+						this.splice(i, 1);
+						len --;
+						i --;
 					}
 				}
-				return arr;
 			}
-			console.log(maopao(arr4))
+			arr6.oo()
+			console.log(arr6)
 			
 		</script>
 		

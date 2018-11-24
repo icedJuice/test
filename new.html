@@ -19,26 +19,26 @@
 //			}
 //			
 		
-			function _new () {
-				var f = Array.prototype.shift.call(arguments);
-				var o = Object.create(f.prototype);
-				f.apply(o, arguments);
-				return o;
-			}
+function _new () {
+	var f = Array.prototype.shift.call(arguments);
+	var o = Object.create(f.prototype);
+	f.apply(o, arguments);
+	return o;
+}
 			
-			function Pers (name, age) {
-				this.name = name;
-				this.age = age;
-				this.speak = function () {
-					console.log(this.name);
-				}
-			}
-			
-			var p2 = _new(Pers, 'xiaohua', 100);
-			
-			console.log(p2);
-			
-			p2.speak();
+function Pers (name, age) {
+	this.name = name;
+	this.age = age;
+	this.speak = function () {
+		console.log(this.name);
+	}
+}
+
+var p2 = _new(Pers, 'xiaohua', 100);
+
+console.log(p2);
+
+p2.speak();
 			
 			
 			
