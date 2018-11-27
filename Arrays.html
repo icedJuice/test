@@ -40,7 +40,7 @@
 //			fn('小华', '', 100)
 //			
 //			
-			var arr4 = [8,9,1,8,6,5,2,7]
+//			var arr4 = [8,9,1,8,6,5,2,7]
 //			
 //			function maopao (arr) {
 //				if (! arr instanceof Array) return false;
@@ -55,8 +55,8 @@
 //			}
 //			console.log(maopao(arr4))
 			
-			var arr5 = [1,2,3,4,5,6,7,8,9];
-			var arr6 = [1, {name: '000'},null, 3, 4,'', undefined, 5, 6, 7, 8, 9];
+//			var arr5 = [1,2,3,4,5,6,7,8,9];
+//			var arr6 = [1, {name: '000'},null, 3, 4,'', undefined, 5, 6, 7, 8, 9];
 
 //			console.log(arr5.slice(4, -1));
 //			var arr7 = arr6.filter(function (item) {
@@ -65,19 +65,30 @@
 //			arr6[1].name = '111'
 //			console.log(arr7)
 //			
-			Array.prototype. = function () {
-				var len = this.length;
-				for (var i = 0; i < len; i ++) {
-					if (this[i] == null || this[i] === '') {
-						this.splice(i, 1);
-						len --;
-						i --;
-					}
-				}
-			}
-			arr6.oo()
-			console.log(arr6)
+//			Array.prototype. = function () {
+//				var len = this.length;
+//				for (var i = 0; i < len; i ++) {
+//					if (this[i] == null || this[i] === '') {
+//						this.splice(i, 1);
+//						len --;
+//						i --;
+//					}
+//				}
+//			}
+//			arr6.oo()
+//			console.log(arr6)
+//			
 			
+//			Array.from(,) 第一个参数为数组或者字符串，第二个参数为一个函数 f()
+//          可以吧字符串转为数字
+			var str1 = '123 abc';
+			var arr8 = Array.from(str1, function (item, index) {
+				console.log(item === ' ')
+				if( item != ' ' ) {
+					return item
+				}
+			})
+
 		</script>
 		
 	</body>
