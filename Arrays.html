@@ -5,9 +5,9 @@
 		<title></title>
 	</head>
 	<body>
-		<div>
+		<div id="div">
 			<span></span>
-			<span></span>
+			<span id="spanid"></span>
 			<span></span>
 			<span></span>
 			<span></span>
@@ -103,9 +103,24 @@
 //			console.log( arr9.constructor === Array);
 //			console.log( Array.isArray( arr9) );
 
-
-// array.findIndex();
-// 用于找到指定值的 索引值
+// Array.find(function(el) {});
+// 用于查找某个值, 返回第一个满足条件的el
+// Array.findIndex();
+// 用于找到第一个满足条件的值的 索引值
+	
+	    var spans = document.getElementById('div').getElementsByTagName('span');
+	    var spanArray = Array.from(spans);
+	    
+	    var spanid = document.getElementById('spanid');
+	    var arr = [7, 0, 9, 19, 4, 18]
+	    
+	    console.log(arr.find(function (item) {
+	    	return item % 2 === 0;
+	    }))
+	    
+	    console.log(spanArray.findIndex(function (item) {
+	    	return item === spanid;
+	    }))
 
 		</script>
 		
