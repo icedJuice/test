@@ -81,19 +81,27 @@
 			
 //			Array.from(,) 第一个参数为数组或者字符串，第二个参数为一个函数 f()
 //          可以吧字符串转为数字
-			var str1 = '123 abc';
-			var arr8 = Array.from(str1, function (item, index) {
-				console.log(item === ' ')
-				if( item != ' ' ) {
-					return item
-				}
-			})
-			
-			function fn() {
-				console.log(Array.from(arguments))
-				
-			}
-			fn(1, 2, 3, 5, 100)
+//			var str1 = '123 abc';
+//			var arr8 = Array.from(str1, function (item, index) {
+//				console.log(item === ' ')
+//				if( item != ' ' ) {
+//					return item
+//				}
+//			})
+//			
+//			function fn() {
+//				console.log(Array.from(arguments))
+//				
+//			}
+//			fn(1, 2, 3, 5, 100)
+
+// 判断一个值是否是数组的 3个 方法；
+
+			var arr9 = [];
+			console.log( arr9 instanceof Array );
+			console.log( arr9.constructor === Array);
+			console.log( Array.isArray( arr9) );
+
 		</script>
 		
 	</body>
