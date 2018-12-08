@@ -12,12 +12,16 @@
 			
 			var m;
 			
-			m = str.match(/\-(.)/);
+//			m = str.match(/\-(.)/); 正则匹配
 			
 			
 			console.log(m);
 			
-			
+			// 将两个匹配到的替换
+//			$1, $2,..... $99;
+//			对应正则匹配到的字符串
+			name = "Doe, John";
+			name.replace(/(\w+)\s*, \s*(\w+)/, "$2 $1"); //John, Doe
 			
 			
 		</script>
