@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<!--
+			1. vue 的 :key
+			当使用for循环进行dom生成，或者其他需要用到组件复用的情况时， 如果只用 index 作为key值，会导致dom的复用，在没有 keepalive 的模式下问题并不是很明显
+			但是当使用 keepalive的时候， 问题就会变的尤为明显，一些状态或者在dom中引用了其他的组件
+			那么此时， 最好的做法是给 每一个循环的值加一个字段  （暂且命名为 __id） 使用随机生成的字符串 来作为每个item 的 key值。
+			
+			2. 合理使用keepalive
+			
+			keepalive 可以在使组件不被销毁， 灵活使用能够大大减少页面渲染的消耗，大大提高页面性能
+			
+			
+			
+			
+			
+		-->
+		
+		
+	</body>
+</html>
