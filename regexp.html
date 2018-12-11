@@ -36,17 +36,17 @@
 //			name.replace(/(\w+)\s*, \s*(\w+)/, "$2 $1"); //John, Doe
 			// 在指定位置后插入 内容 ，正则匹配
 			// 使用场景 将输入框输入的内容， 每4个字符中间加个空格
-			var reg = /[0-9a-zA-Z]{4}/g
-			
-			var str = "ABCDEFGHIJKLMNO";
-			str = str.replace(/([0-9a-zA-Z]{4})/g, "$1 ");
-			console.log(str); // ABCD EFGH IJKL MNO
-			
-			ipt.oninput = function (e) {
-				var val = ipt.value.replace(/\s/g, '');
-				val = val.toUpperCase().replace(/([0-9a-zA-Z]{4})/g, "$1 ");
-				ipt.value = val;
-			}
+//			var reg = /[0-9a-zA-Z]{4}/g
+//			
+//			var str = "ABCDEFGHIJKLMNO";
+//			str = str.replace(/([0-9a-zA-Z]{4})/g, "$1 ");
+//			console.log(str); // ABCD EFGH IJKL MNO
+//			
+//			ipt.oninput = function (e) {
+//				var val = ipt.value.replace(/\s/g, '');
+//				val = val.toUpperCase().replace(/([0-9a-zA-Z]{4})/g, "$1 ");
+//				ipt.value = val;
+//			}
 			
 			
 		</script>
