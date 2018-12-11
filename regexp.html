@@ -5,6 +5,7 @@
 		<title></title>
 	</head>
 	<body>
+		<input type="" name="" id="" value="" />
 		
 		<script type="text/javascript">
 			
@@ -15,13 +16,20 @@
 //			m = str.match(/\-(.)/); 正则匹配
 			
 			
-			console.log(m);
+//			console.log(m);
 			
 			// 将两个匹配到的替换
 //			$1, $2,..... $99;
 //			对应正则匹配到的字符串
 			name = "Doe, John";
-			name.replace(/(\w+)\s*, \s*(\w+)/, "$2 $1"); //John, Doe
+//			name.replace(/(\w+)\s*, \s*(\w+)/, "$2 $1"); //John, Doe
+			// 在指定位置后插入 内容 ，正则匹配
+			// 使用场景 将输入框输入的内容， 每4个字符中间加个空格
+			var reg = /[0-9a-zA-Z]{4}/g
+			
+			var str = "ABCDEFGHIJKLMNO";
+			str = str.replace(/([0-9a-zA-Z]{4})/g, "$1 ");
+			console.log(str); // ABCD EFGH IJKL MNO
 			
 			
 		</script>
