@@ -4,8 +4,19 @@
 		<meta charset="UTF-8">
 		<title></title>
 	</head>
+	<style type="text/css">
+		
+		input{
+			width: 300px;
+			height: 40px;
+			background-color: #F7F7F7;
+			border: 1px solid #111111;
+			text-align: center;
+		}
+		
+	</style>
 	<body>
-		<input type="" name="" id="" value="" />
+		<input id=ipt type="" name="" id="" value="" />
 		
 		<script type="text/javascript">
 			
@@ -30,6 +41,12 @@
 			var str = "ABCDEFGHIJKLMNO";
 			str = str.replace(/([0-9a-zA-Z]{4})/g, "$1 ");
 			console.log(str); // ABCD EFGH IJKL MNO
+			
+			ipt.oninput = function (e) {
+				var val = ipt.value.replace(/\s/g, '');
+				val = val.toUpperCase().replace(/([0-9a-zA-Z]{4})/g, "$1 ");
+				ipt.value = val;
+			}
 			
 			
 		</script>
