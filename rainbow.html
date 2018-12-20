@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/monokai.css"/>
+	</head>
+	<body>
+		<pre>
+          <code class="javascript" data-language="JavaScript">
+                export function JAMS__mark() {
+                    if (/android/i.test(navigator.userAgent)) {
+                        try {
+                            window.android.JAMS__mark(params)
+                        } catch (e) {
+                            console.log(e)
+                        }
+                    } else if (/ios|iphone|ipod|pad/i.test(navigator.userAgent)) {
+                        try {
+                            window.webkit.messageHandlers.JAMS__mark.postMessage(params)
+                        } catch (e) {
+                            console.log(e)
+                        }
+                    }
+                }
+          </code>
+        </pre>
+		
+		<script src="js/rainbow-custom.min.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
