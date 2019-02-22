@@ -17,9 +17,7 @@
 	</style>
 	<body>
 		<input id=ipt type="" name="" id="" value="" />
-		
 		<script type="text/javascript">
-			
 			var str = '1-20125-1'
 			
 			var m;
@@ -47,6 +45,29 @@
 //				val = val.toUpperCase().replace(/([0-9a-zA-Z]{4})/g, "$1 ");
 //				ipt.value = val;
 //			}
+			
+			function getQueryString(name) { 
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+				var r = window.location.search.substr(1).match(reg); 
+				if (r != null) return unescape(r[2]); return null; 
+			}
+			
+			var xml = '<div class="div"><p class="p"><p></div>'
+			var xm2 = xml.replace(/(\s+class=")([^"]*)/g, "$1QQ" )
+			console.log(xm2)
+			
+			
+			
+			function getUrlParams(key) {
+				
+				try{ return new RegExp("(\\?|&)" + key + "=([^&]*)(&|$)").exec(location.href)[2] } catch (e) {}
+			}
+
+
+			// console.log(getUrlParams('from'))
+			
+			
+			
 			
 			
 		</script>
