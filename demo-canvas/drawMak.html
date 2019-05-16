@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
+</head>
+<body>
+
+<div id='div'></div>
+<button type="button" id="button">download</button>
+
+<script type="text/javascript">
+	
+	
+	var src = 'https://asset.txqn.huohua.cn/image/0838583f-6c40-4215-af43-26606125de75.png';
+	
+	function get(src, name) {
+		
+		loadImg(src).then(img => {
+			console.log('loadImg');
+			var width = img.width;
+			var height = img.height;
+			var canvas = document.createElement('canvas');
+			canvas.width = width;
+			canvas.height = height;
+			
+			var ctx = canvas.getContext('2d');
+			
+			ctx.drawImage(img, 0, 0, width, height);
+			
+			console.log('ctx.drawImage');
+			
+			canvas.toBlob((blob) => {
+				console.log('canvas.toBlob');
+				
+				var reader = new FileReader();
+				
+				reader.readAsDataURL(blob);
+				console.log('console.log(reader.readAsDataURL)');
+				reader.onload = function (e) {
+					var res = e.target.result;
+					
+					var a = document.createElement('a');
+					a.setAttribute('download', name || 'img' + Math.random().toString(36).substring(2));
+					a.setAttribute('target', '_blank');
+					a.setAttribute('href', res);
+					console.log('a.click()');
+					a.click();
+					
+					var img = new Image();
+					img.src = res;
+					
+					document.body.appendChild(img);
+				}
+			});
+			
+		})
+	}
+	
+	function loadImg(src) {
+		return new Promise(resolve => {
+			const img = new Image();
+			img.src = src;
+			img.setAttribute("crossOrigin",'Anonymous');
+			img.onload = () => {
+				resolve(img);
+			}
+		})
+	}
+	document.getElementById('button').onclick = function () {
+		get(src);
+	}
+	
+	
+</script>	
+	
+</body>
+</html>

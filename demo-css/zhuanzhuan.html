@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+	</head>
+	
+	<style type="text/css">
+		body{
+			margin: 0;
+			text-align: center;
+		}
+		.container{
+			position: relative;
+			/* overflow: hidden; */
+			padding-top: 200px;
+		}
+		.zhuanzhuan{
+			position: relative;
+			margin-top: 300px;
+			width: 60px;
+			margin: auto;
+			transform-origin: center center;
+			transition: all .4s ease-out;
+			transform: rotateZ(0);
+		}
+		.item{
+			width: 60px;
+			height: 200px;
+			transform-origin: center bottom;
+			position: absolute;
+			left: 0;
+			bottom: 0;
+		}
+		.item .tar{
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			background-color: greenyellow;
+			transform-origin: center center;
+			transition: all .4s ease-out;
+		}
+		.item.active .tar{
+			transform: scale(1.3, 1.3);
+			background-color: #FFA500;
+		}
+	</style>
+	
+	
+	<body>
+		<div>
+			<br><br>
+			<h1>转转</h1>
+		</div>
+		<div class="container">
+			<div class="zhuanzhuan">
+				
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+				<div class="item">
+					<div class="tar"></div>
+				</div>
+
+				
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			
+			function InitZZ(wrapperCls, itemCls, activeCls) {
+				this.zz = document.getElementsByClassName(wrapperCls)[0];
+				this.items = Array.from(this.zz.getElementsByClassName(itemCls));
+				this.timer = null;
+				this.isAutoPlay = false;
+				this.durtionTime = 3000;
+				this.prevelIndex = 0;
+				this.activeIndex = 0;
+				this.len = this.items.length;
+				this.deg = 0;
+				this.partDeg = 360 / this.len;
+				this.activeClassName = activeCls || 'active';
+
+				this.onChange = () => {};
+			}
+
+			InitZZ.prototype.init = function(activeIndex) {
+				// @params {Number} activeIndex 哪个被初始化为聚焦点， 默认第0个；
+				var _this = this;
+				this.items.forEach((el, index) => {
+					
+					el.style.transform = 'rotateZ('+ 360 / this.len * index +'deg)';
+					
+					if (index === this.activeIndex) {
+						el.className = el.className + ' ' + this.activeClassName;
+					}
+					
+					el.onclick = function () {
+						if (index === _this.activeIndex) return false;
+
+						clearInterval(_this.timer);
+						_this.focus(index, () => {
+							if(_this.isAutoPlay) {
+								_this.autoPlay(_this.durtionTime);
+							}
+						});
+					}
+				})
+			}
+
+
+			InitZZ.prototype.autoPlay = function (durtionTime) {
+				this.isAutoPlay = true;
+				this.durtionTime = durtionTime || this.durtionTime;
+				clearInterval(this.timer);
+				this.timer = setInterval(() => {
+					this.focus((this.activeIndex + 1) % this.len);
+				}, durtionTime);
+			}
+			
+			InitZZ.prototype.focus = function(index, callback) {
+
+				if (index === this.prevelIndex) return false;
+
+						var len = this.len;
+						this.prevelIndex = this.activeIndex;
+						var prevIndex = this.prevelIndex;
+
+						var activeClassName = this.activeClassName;
+
+						var i = Array.from(new Array(len * 3), (k, v) => (v + prevIndex) % len).slice(len, len * 2).indexOf(index);
+
+						this.items[index].className = this.items[index].className + ' ' + activeClassName;
+
+						this.items[prevIndex].className = this.items[prevIndex].className.replace(' ' +activeClassName, '');
+						
+						this.deg += this.partDeg * (i - (i > len / 2 ? len : 0));
+					
+						this.zz.style.transform = 'rotateZ('+ -this.deg +'deg)';
+						
+						this.activeIndex = index;
+
+						this._onChange(this.prevelIndex, this.activeIndex);
+
+						if (callback) callback();
+			}
+
+			InitZZ.prototype._onChange = function (prevelIndex, activeIndex) {
+				if(this.onChange) {
+					this.onChange(prevelIndex, activeIndex);
+				}
+			}
+
+			var newZZ = new InitZZ('zhuanzhuan', 'item', 'active');
+			newZZ.init();
+
+			newZZ.autoPlay(2000)
+			
+			// 监听切换事件
+			newZZ.onChange = function (prevIndex, nextIndex) {
+				// @parm {Number} prevIndex 切换前的index值
+				// @parm {Number} nextIndex 切换后的index值
+				console.log(prevIndex, nextIndex);
+			}
+
+
+			// function initZZ () {
+			// 	var zz = document.getElementsByClassName('zhuanzhuan')[0];
+			// 	var items = Array.from(zz.getElementsByClassName('item'));
+			// 	var activeIndex = 0;
+			// 	var len = items.length;
+			// 	var deg = 0;
+			// 	var partDeg = 360 / len;
+			// 	var activeClassName = 'active';
+			
+			// 	items.forEach((el, index) => {
+					
+			// 		el.style.transform = 'rotateZ('+ 360 / len * index +'deg)';
+					
+			// 		if (index === activeIndex) {
+			// 			el.className = el.className + ' ' +activeClassName;
+			// 		}
+					
+			// 		el.onclick = function () {
+						
+			// 			if (index === activeIndex) return false;
+						
+			// 			var i = Array.from(new Array(len * 3), (k, v) => (v + activeIndex) % len).slice(len, len * 2).indexOf(index);
+
+			// 			this.className = this.className + ' ' +activeClassName;
+
+			// 			items[activeIndex].className = items[activeIndex].className.replace(' ' +activeClassName, '');
+						
+			// 			deg += partDeg * (i - (i > len / 2 ? len : 0));
+					
+			// 			zz.style.transform = 'rotateZ('+ -deg +'deg)';
+						
+			// 			activeIndex = index;
+			// 		}
+			// 	})
+				
+			// }
+			// initZZ();
+			
+			
+		</script>
+		
+	</body>
+</html>

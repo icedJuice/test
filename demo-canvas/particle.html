@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>寒玉知 - particle</title>
+	</head>
+	<style type="text/css">
+		body{margin: 0;background: #000000;overflow: hidden;}
+	</style>
+	<body>
+		
+		<canvas id="canvas" width="" height=""></canvas>
+		
+		<script type="text/javascript">
+			
+			var particleCount = document.documentElement.clientWidth * 7;
+			
+			var width = document.documentElement.clientWidth;
+			var height = document.documentElement.clientHeight;
+			
+			var spos = {x: width / 10, y: height / 2};
+			
+			var arandom = {
+				x: 0.4,
+				ax: 0.008,
+				y: 0.2,
+				ay: 0.001
+			}
+			
+			var max = width / 2;
+			
+			var canvas = document.getElementById('canvas');
+			canvas.width = width;
+			canvas.height = height;
+			
+			var ctx = canvas.getContext('2d');
+			
+			ctx.fillStyle = '#000EFF';
+			
+			var particles = Array.from(new Array(particleCount), (h, v) => ({
+				x: spos.x,
+				y: spos.y,
+				sx: arandom.x,
+				sy: Math.random() * arandom.y,
+				ax: Math.random() * arandom.ax,
+				ax: Math.random() * arandom.ax,
+				ay: Math.random() * arandom.ay,
+				way: Math.random() >= 0.5 ? true : false,
+				isreturn: false,
+			}));
+			
+			
+			var now = 0;
+			
+			function run () {
+				now += 5;
+				if (now > particles.length - 1) {
+					now = particles.length - 1;
+				}
+				
+				ctx.clearRect(0,0,width,height);
+				
+				for (var i = 0; i < now; i ++) {
+					particles[i].x += particles[i].sx;
+					particles[i].y += particles[i].sy * Number((particles[i].way) - 0.5) * 2;
+					
+					particles[i].sx += particles[i].ax;
+					particles[i].sy += particles[i].ay;
+					
+					if (particles[i].x < 0 || particles[i].y > height || particles[i].y < 0) {
+						particles[i].x = spos.x;
+						particles[i].y = spos.y;
+						particles[i].sx = arandom.x;
+						particles[i].sy = Math.random() * arandom.y;
+						particles[i].ax = Math.random() * arandom.ax;
+						particles[i].ax = Math.random() * arandom.ax;
+						particles[i].ay = Math.random() * arandom.ay;
+						particles[i].way = Math.random() >= 0.5 ? true : false;
+						particles[i].isreturn = false;
+					}
+					
+					if (
+						!particles[i].isreturn &&
+						((particles[i].x - spos.x) * (particles[i].x - spos.x) + (particles[i].y - spos.y) * (particles[i].y - spos.y)) > max * max
+					) {
+						particles[i].ax = - particles[i].ax * 2;
+						particles[i].isreturn = true;
+					}
+					
+					ctx.fillRect(particles[i].x, particles[i].y, 1, 1);
+				}
+				
+				requestAnimationFrame(run);
+			}
+			
+			run();
+			
+			
+			
+			function subStr() {
+				var array = location.search.replace(/^\?/, '').split('&');
+				var obj = {};
+				array.map((el) => {
+					var str = el.split('=');
+					obj[str[0]] = str[1];
+					
+				})
+				return obj;
+			}
+			
+			
+		</script>
+	</body>
+</html>

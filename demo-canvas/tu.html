@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var src = 'https://thirdwx.qlogo.cn/mmopen/3gE0Qmxlj7VicA7rB4KLiaxCWUPoz2Gibo93Ec28yAqO6Kkb8sFeMejQ8ARicqKS4kOCyw6tZgFFPckm2K7qlZtKaWvpMdMoJWtm/132'
+			var img = new Image();
+			img.crossOrigin = "Anonymous";
+			img.src = src;
+			img.onload = function () {
+				var width = img.width;
+				var height = img.height;
+				
+				var canvas = document.createElement('canvas');
+				canvas.width = width;
+				canvas.height = height;
+				var ctx = canvas.getContext('2d');
+				
+				ctx.drawImage(img, 0, 0, height, height)
+				
+				document.body.appendChild(canvas);
+				canvas.toBlob(function (blob) {
+					console.log(blob);
+					
+					var loader = new FileReader();
+					loader.readAsDataURL(blob);
+					
+					loader.onload = function (e) {
+						var res = e.target.result
+						var img = new Image();
+						img.src = res;
+						document.body.appendChild(img);
+					}
+				});
+			}
+			
+			
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+	</head>
+	<style type="text/css">
+		body{margin: 0;}
+		canvas{
+			display: block;
+			margin: 0 auto;
+		}
+	</style>
+	<body>
+		
+
+		<script type="text/javascript">
+			
+			function QWER () {
+				var self = this;
+				this.canvas = document.createElement('canvas');
+				this.canvas.width = 360;
+				this.canvas.height = 400;
+				this.canvas.id = 'QWER-canvas';
+				
+				this.ctx = this.canvas.getContext('2d');
+				
+				this.textArray = [ '德', '玛', '西', '亚', '万', '岁'];
+				this.urlKey = 'text';
+				
+				try{ this.textArray = new RegExp("(\\?|&)" + this.urlKey + "=([^&]*)(&|$|#)").exec(decodeURI(location.search))[2].split(''); } catch (e) {}
+				
+				document.getElementsByTagName('title')[0].innerHTML = this.textArray.join('');
+				
+				this.step = 40;
+				this.harfSpace = 3;
+				this.zoom = 5;
+				
+				if (!document.getElementById('QWER-canvas')) {
+					document.getElementsByTagName('body')[0].appendChild(this.canvas);
+				}
+				
+			}
+			
+			QWER.prototype = {
+			
+				cubicEaseIn: (t, b, c, d) => -c *(t /= d)*(t-2) + b,
+				
+				machin: function (array, addations) {
+		
+					const addArr = Array.apply(null, {length: addations}).map(() => array[(Math.random() * array.length) | 0]);
+					
+					return array.concat(addArr).sort(() => Math.random() > 0.5);
+				},
+				
+				creatPaticArray: function(text) {
+					const array = [];
+					const width = 80;
+					const height = 80;
+					const canvas = document.createElement('canvas');
+					canvas.width = width;
+					canvas.height = height;
+					const ctx = canvas.getContext('2d');
+					ctx.fillStyle = '#000000';
+					ctx.font = 'bold 60px Arial';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'middle';
+					ctx.clearRect(0,0, width, height);
+					ctx.beginPath();
+					ctx.fillText(text, width/2, height/2);
+					ctx.closePath();
+					const data = ctx.getImageData(0, 0, width,height);
+					const partArray = this.getParts(data.data, 3);
+					return partArray;
+				},
+				
+				
+				getParts: function (data, space, _width, _height) {
+					const harfSpace = (space + 1) / 2 | 0;
+					const partArray = [];
+					const width = _width || Math.sqrt(data.length / 4);
+					const height = _height || width;
+					
+					for (let i = 0; i < width; i += space) {
+						
+						for (let j = 0; j < height; j += space) {
+							
+							const p =  ((j + harfSpace) * width + i + harfSpace) * 4;
+							
+							if (data[p + 3]) {
+								partArray.push({
+									x: i + harfSpace,
+									y: j + harfSpace,
+									c: [
+										Math.random() * 255 | 0,
+										Math.random() * 255 | 0,
+										Math.random() * 255 | 0,
+										255,
+									]
+// 									c: [
+// 										data[p + 0],
+// 										data[p + 1],
+// 										data[p + 2],
+// 										data[p + 3],
+// 									]
+								})
+							}
+						}
+					}
+					return partArray;
+				},
+					
+				exce: function(startArray, endArray) {
+					
+					let dvalue = startArray.length - endArray.length;
+					const maxLength = Math.max(startArray.length, endArray.length);
+					
+					let _startArr, _endArr;
+					
+					if (dvalue !== 0) {
+						if (dvalue > 0) {
+							_endArr = this.machin(endArray, Math.abs(dvalue));
+						} else {
+							_startArr = this.machin(startArray, Math.abs(dvalue));
+						}
+					}
+					
+					const sarray = _startArr || startArray;
+					const earray = _endArr || endArray;
+					
+					this.cercleRun(sarray, earray);
+				},
+				
+				drawText: function(array) {
+					this.ctx.clearRect(0,0,400,400);
+					
+					for (let i = 0; i < array.length; i++) {
+						this.ctx.fillStyle = 'rgba('+array[i].c[0]+','+array[i].c[1]+','+array[i].c[2]+','+array[i].c[3]+')';
+						this.ctx.beginPath();
+						this.ctx.arc(array[i].x * this.zoom, array[i].y * this.zoom, this.harfSpace, 0, 2*Math.PI);
+						this.ctx.fill();
+					}
+				},
+				
+				cercleRun: function (start, end) {
+					
+					const step = this.step;
+					const harfSpace = this.harfSpace;
+					const zoom = this.zoom;
+					const cubicEaseIn = this.cubicEaseIn;
+					let timer = null;
+					let num = 0;
+					
+					let x, y, c={};
+					
+					
+					
+					const runStep = () => {
+						num ++;
+						
+						this.ctx.clearRect(0,0,400,400);
+						
+						for (let i = 0; i < start.length; i++) {
+				
+							x = cubicEaseIn(num, start[i].x, end[i].x - start[i].x, step);
+							y = cubicEaseIn(num, start[i].y, end[i].y - start[i].y, step);
+							c.r = cubicEaseIn(num, start[i].c[0], end[i].c[0] - start[i].c[0], step) | 0;
+							c.g = cubicEaseIn(num, start[i].c[1], end[i].c[1] - start[i].c[1], step) | 0;
+							c.b = cubicEaseIn(num, start[i].c[2], end[i].c[2] - start[i].c[2], step) | 0;
+							c.a = cubicEaseIn(num, start[i].c[3], end[i].c[3] - start[i].c[3], step) | 0;
+							// this.ctx.fillStyle = '#' + (Math.random() * 4096 | 0).toString(16);
+							this.ctx.fillStyle = 'rgba('+c.r+','+c.g+','+c.b+','+c.a+')';
+							this.ctx.beginPath();
+							this.ctx.arc(x * zoom, y * zoom, harfSpace, 0, 2*Math.PI);
+							this.ctx.fill();
+						}
+						if (num < step) {
+							
+							requestAnimationFrame(runStep)
+						}
+					}
+					runStep();
+				},
+			
+				run: function () {
+					const textArray = this.textArray;
+					
+					const particleArrays = [];
+					
+					textArray.forEach(item => {
+						const arr = this.creatPaticArray(item)
+						particleArrays.push(arr);
+					})
+					console.log(particleArrays);
+					const partArrayLength = particleArrays.length;
+					
+					const maxPartiLength = Math.max(...particleArrays.map(item => item.length));
+					
+					let i = 0;
+					const l = particleArrays.length;
+					
+					this.drawText(particleArrays[i % (l-1)]);
+					
+					setInterval(() => {
+						this.exce(particleArrays[i % l], particleArrays[(i + 1) % l])
+						i ++;
+					}, 1500)
+				
+				}
+			
+			
+			}
+			
+			
+			
+			
+			var fn = new QWER()
+			fn.run();		
+			
+			const titledom = document.getElementsByTagName('title')[0];
+			let title = '';
+			window.onblur = function () {
+				title = titledom.innerHTML;
+				titledom.innerHTML = '咦，去哪啦？';
+			}
+			window.onfocus = function () {
+				console.log('onfocus');
+				titledom.innerHTML = title;
+			}
+
+		</script>
+	</body>
+</html>

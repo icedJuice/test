@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+	</head>
+	<style type="text/css">
+		html{height: 100%;}
+		body{
+			width: 100%;
+			height: 100%;
+			margin: 0;
+		}
+		.popup{
+			display: none;
+			position: fixed;
+			left: 0;top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 8;
+			opacity: 0;
+			background-color: rgba(0,0,0,0.5);
+			transition: opacity .4s  ease-out;
+		}
+		.popup-container{
+			position: absolute;
+			left: 40px;
+			top: 40px;
+			right: 40px;
+			bottom: 120px;
+			background-color: #FFFFFF;
+			border-radius: 30px;
+		}
+		.close-btn {
+			position: absolute;
+			left: 50%;
+			bottom: -100px;
+			width: 48px;
+			height: 48px;
+			transform: translateX(-50%);
+			border-radius: 50%;
+			background-color: #FFFFFF;
+			font-size: 32px;
+			color: #333;
+			text-align: center;
+			line-height: 60px;
+		}
+		.item-container{
+			padding-top: 500px;
+			width: 100%;
+			height: 100px;
+		}
+		.item {
+			float: left;
+			position: relative;
+			width: 80px;
+			height: 100px;
+			padding: 0 4px;
+			transition: transform .4s cubic-bezier(.01,.5,.49,.99);
+			transform-origin: center center;
+			transform: translate(0, 0) scale(1,1);
+		}
+		.item .pos {
+			width: 80px;
+			height: 100px;
+		}
+		.item:nth-child(1) .pos {
+			background-color: gold;
+		}
+		.item:nth-child(2) .pos {
+			background-color: green;
+		}
+		.item:nth-child(3) .pos {
+			background-color: blue;
+		}
+		.item:nth-child(4) .pos {
+			background-color: darkblue;
+		}
+	</style>
+	<body>
+	
+		<div class="popup">
+			<div class="popup-container">
+				<div class="item-pos">
+					
+				</div>
+				<div class="close-btn">
+					X
+				</div>
+			</div>
+		</div>
+		<div class="item-container">
+			<div class="item-wrapper">
+				<div class="item">
+					<div class="pos"></div>
+				</div>
+				<div class="item">
+					<div class="pos"></div>
+				</div>
+				<div class="item">
+					<div class="pos"></div>
+				</div>
+				<div class="item">
+					<div class="pos"></div>
+				</div>
+			</div>
+		</div>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		<script type="text/javascript">
+			var items = document.getElementsByClassName('item');
+			var poshode = {
+				x: 0, y: 0
+			}
+			var zoom = 1.3;
+			var target  = {
+				x: document.documentElement.clientWidth / 2 - 40,
+				y: 80,
+			}
+			var pop = document.getElementsByClassName('popup')[0];
+			pop.addEventListener('touchmove', function (event) {event.preventDefault()})
+			pop.addEventListener('transitionend', function () {
+				if (this.isTransition) {
+					this.isTransition = false;
+					this.style.display = 'none';
+				} else {
+					this.isTransition = true;
+				}
+			})
+			
+			Array.from(items).forEach(function (el, index) {
+				el.isTransition = false;
+				el.addEventListener('transitionend', function () {
+					if (!this.isTransition) {
+						this.style.zIndex = 1;
+					}
+				})
+				el.addEventListener('click', function (event) {
+					if (this.isTransition) {
+						this.isTransition = false;
+						this.style.transform = 'translate(0,0) scale(1,1)';
+						pop.style.opacity = 0;
+					} else {
+						var posX = el.getBoundingClientRect().x;
+						var posY = el.getBoundingClientRect().y;
+						this.isTransition = true;
+						this.style.zIndex = 9;
+						this.style.transform = 'translate(' + (target.x - posX) + 'px,'+ (target.y - posY) +'px) scale('+ zoom +','+ zoom +')';
+						
+						pop.style.display = 'block';
+						pop.style.opacity = 0;
+						setTimeout(function () {
+							pop.style.opacity = 1;
+						})
+					}
+					
+				})
+			})
+			
+			function showPop(index) {
+				
+			}
+			
+			function closePop (index) {
+				
+			}
+			
+			
+		</script>
+		
+	</body>
+</html>

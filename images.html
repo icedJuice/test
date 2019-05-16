@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	
+	<body>
+		
+		<canvas id="canvas" width="400" height="400"></canvas>
+
+		<script type="text/javascript">
+			
+			const canvas = document.getElementById('canvas');
+			const ctx = canvas.getContext('2d');
+			
+			const src1 = 'assets/board-gift.png';
+			const src2 = 'assets/waiting-package.png';
+			const src3 = 'assets/waiting-monkey.png';
+			
+			const cubicEaseIn = (t, b, c, d) => -c *(t /= d)*(t-2) + b;
+
+			
+			
+			function loadImg (src) {
+				return new Promise(resolve => {
+					const img = new Image();
+					img.src = src;
+					img.onload = () => {
+						resolve(img);
+					}
+				})
+			}
+			
+			const partics = [];
+			const promiseArray = [];
+			promiseArray.push(
+				loadImg(src1).then(img => {
+					ctx.drawImage(img, 0,0, 400,400);
+
+					const data2 = ctx.getImageData(0,0,400,400);
+					
+					ctx.clearRect(0,0,400,400);
+					
+					const partArray = getPartArray(data2.data, 7);
+					partics.push(partArray);
+					
+				})
+			)
+			promiseArray.push(
+				loadImg(src2).then(img => {
+					ctx.drawImage(img, 0,0, 400,400);
+				
+					const data2 = ctx.getImageData(0,0,400,400);
+					
+					ctx.clearRect(0,0,400,400);
+					
+					const partArray = getPartArray(data2.data, 7);
+					partics.push(partArray);
+					
+				})
+			)
+			
+			
+			Promise.all(promiseArray).then(() => {
+				console.log(partics)
+				cercleRun(partics);
+				
+			})
+			
+			
+			
+			function getPartArray (data, space) {
+				const harfSpace = (space + 1) / 2 | 0;
+				const partArray = [];
+				for (let i = 0; i < 400; i += space) {
+					for (let j = 0; j < 400; j += space) {
+						const p =  ((j + harfSpace) * 400 + i + harfSpace) * 4; 
+						if (data[p + harfSpace] > 30) {
+							partArray.push({
+								x: i + harfSpace,
+								y: j + harfSpace,
+								c: [
+									data[p + 0],
+									data[p + 1],
+									data[p + 2],
+									data[p + 3],
+								]
+							})
+						}
+						
+					}
+				}
+				return partArray;
+			}
+			
+			
+			function draw(array, space) {
+				var harfSpace = (space + 1) / 2 | 0;
+				for (let i = 0; i < array.length; i ++) {
+					const c = array[i];
+					ctx.fillStyle = 'rgba('+c.c[0]+','+c.c[1]+','+c.c[2]+','+c.c[3]+')';
+					ctx.fillRect(c.x, c.y, harfSpace,harfSpace);
+				}
+			}
+			
+			function cercleRun (array) {
+				const step = 60;
+				const timeSpase = 40;
+				const delay = 2000;
+				const harfSpace = 5
+				let timer = null;
+				let num = 0;
+				let x, y, c={};
+				let start, end;
+				
+				if (array[0].length < array[1].length) {
+					start = array[0];
+					end = array[1];
+				} else {
+					start = array[1];
+					end = array[0];
+				}
+				draw(start, harfSpace * 2);
+				setTimeout(() => {
+					runStep()
+				}, 2000)
+				
+				
+				
+				
+				function runStep() {
+					num ++;
+					
+					ctx.clearRect(0,0,400,400);
+					
+					for (let i = 0; i < array[0].length; i++) {
+						x = cubicEaseIn(num, start[i].x, end[i].x - start[i].x, step);
+						y = cubicEaseIn(num, start[i].y, end[i].y - start[i].y, step);
+						c.r = cubicEaseIn(num, start[i].c[0], end[i].c[0] - start[i].c[0], step) | 0;
+						c.g = cubicEaseIn(num, start[i].c[1], end[i].c[1] - start[i].c[1], step) | 0;
+						c.b = cubicEaseIn(num, start[i].c[2], end[i].c[2] - start[i].c[2], step) | 0;
+						c.a = cubicEaseIn(num, start[i].c[3], end[i].c[3] - start[i].c[3], step) | 0;
+										
+						ctx.fillStyle = 'rgba('+c.r+','+c.g+','+c.b+','+c.a+')';
+						ctx.fillRect(x, y, harfSpace,harfSpace);
+					}
+					if (num < step) {
+						requestAnimationFrame(runStep)
+					}
+				}
+				
+				
+				
+				
+			}
+			
+			
+			
+// 			setTimeout(() => {
+// 				timer = setInterval(() => {
+// 					
+// 					num ++;
+// 					if (num >= step) {
+// 						clearInterval(timer);
+// 					}
+// 					ctx.clearRect(0,0,400,400);
+// 					
+// 					for (let i = 0; i < array[0].length; i++) {
+// 						x = cubicEaseIn(num, start[i].x, end[i].x - start[i].x, step);
+// 						y = cubicEaseIn(num, start[i].y, end[i].y - start[i].y, step);
+// 						c.r = cubicEaseIn(num, start[i].c[0], end[i].c[0] - start[i].c[0], step) | 0;
+// 						c.g = cubicEaseIn(num, start[i].c[1], end[i].c[1] - start[i].c[1], step) | 0;
+// 						c.b = cubicEaseIn(num, start[i].c[2], end[i].c[2] - start[i].c[2], step) | 0;
+// 						c.a = cubicEaseIn(num, start[i].c[3], end[i].c[3] - start[i].c[3], step) | 0;
+// 				
+// 						ctx.fillStyle = 'rgba('+c.r+','+c.g+','+c.b+','+c.a+')';
+// 						ctx.fillRect(x, y, harfSpace,harfSpace);
+// 						
+// 					}
+// 						
+// 					
+// 					
+// 				}, timeSpase )
+// 			}, delay)
+			
+		</script>
+	</body>
+</html>
