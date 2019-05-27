@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			
+			var DBOpenRequest = window.indexedDB.open('test', 1);
+			var db;
+			console.log(DBOpenRequest);
+			var data = [
+			  {
+				  id: 0
+			    string:
+			      '第一批文字文本第一批文字文本第一批文字文本第一批文字文本第一批文字文本第一批文字文批文字文本第一批文字文本本',
+			    voice: 'audio/pet/test-fiveDays',
+			  },
+			  {
+				  id: 1
+			    string: '第二批文字文本',
+			    voice: 'audio/pet/test-fiveDays',
+			  },
+			  {
+				  id: 2
+			    string: '第三批文字文本',
+			    voice: 'audio/pet/test-fiveDays',
+			  },
+			];
+			
+			DBOpenRequest.onsuccess = function (event) {
+				// 存储数据结果
+				db = DBOpenRequest.result;
+				console.info('创建打开数据库成功');
+				
+				var objectStore = db.createObjectStore('test', {
+					keyPath: 'id',
+					autoIncrement: true//自增
+				});
+				
+				objectStore.createIndex('id', 'id', {
+					unique: true
+				});
+				objectStore.createIndex("numberIdIndex", "numberId", {
+					unique: false
+				});
+			};
+			
+			
+			
+		</script>
+	</body>
+</html>

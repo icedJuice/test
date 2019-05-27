@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			
+			// 原生js实现Promise
+			
+			function Prom(fn) {
+				var obj = {
+					data: null,
+					err: null,
+					thenFn: null,
+					then: function (fn) {
+						obj.thenFn = fn;
+					},
+					catch: function (fn) {
+						fn(obj.err);
+					}
+				}
+				var resolve = function(data) {
+					obj.thenFn(data);
+				}
+				var reject = function (err) {
+					obj.err = err;
+					obj.catch(fn)
+				}
+				fn(resolve, reject);
+				return obj;
+			}
+			
+			Prom((resolve, reject) => {
+				setTimeout(() => {
+					resolve('a');
+				}, 2000);
+				
+			}).then(e => {
+				console.log(e);
+			})
+			
+			
+				
+			
+			
+		</script>
+	</body>
+</html>

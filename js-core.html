@@ -45,7 +45,9 @@ new 关键字的实现  <br>
 				
 				obj.__proto__ = fn.prototype;
 				
-				fn.call(obj, arg1, arg2);
+				var args = Array.from(arguments).shift();
+				
+				fn.call(obj, args);
 				
 				return obj;
 				

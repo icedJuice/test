@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.0.0/css/swiper.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.0.0/js/swiper.min.js"></script>
+	</head>
+	 <style>
+    body {
+        background: #eee;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color:#000;
+        margin: 0;
+        padding: 0;
+    }
+    .swiper {
+        width: 500px;
+        height: 500px;
+        margin: 20px auto;
+		border: 1px;
+    }
+	.swiper-container {
+		height: 300px;
+	}
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+	
+	.pagination{
+		position: relative;
+		height: 150px;
+	}
+	.pagination-container{
+		overflow: hidden;
+		height: 100%;
+	}
+	.pagination-wrapper{
+		height: 100%;
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-transform-style: preserve-3d;
+		-moz-transform-style: preserve-3d;
+		-ms-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+		-webkit-transition-property: -webkit-transform;
+		-moz-transition-property: -moz-transform;
+		-o-transition-property: -o-transform;
+		-ms-transition-property: -ms-transform;
+		transition-property: transform;
+		-webkit-transform: translate3d(0,0,0);
+		-moz-transform: translate3d(0,0,0);
+		-o-transform: translate(0,0);
+		-ms-transform: translate3d(0,0,0);
+		transform: translate3d(0,0,0);
+		-webkit-box-sizing: content-box;
+		-moz-box-sizing: content-box;
+		box-sizing: content-box;
+	}
+	.pagination-slide{
+		min-width: 150px;
+		text-align: center;
+		height: 100%;
+		box-sizing: border-box;
+		padding:5px 10px 0 0;
+	}
+
+	.item{
+		background-color: #006400;
+		height: 100%;
+		opacity: 0.7;
+	}
+	.pagination-slide.active .item {
+		opacity: 1;
+	}
+    </style>
+	<body>
+		<div class="swiper">
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">Slide 1</div>
+					<div class="swiper-slide">Slide 2</div>
+					<div class="swiper-slide">Slide 3</div>
+					<div class="swiper-slide">Slide 4</div>
+					<div class="swiper-slide">Slide 5</div>
+					<div class="swiper-slide">Slide 6</div>
+				</div>
+			</div>
+			
+			<div class="pagination">
+				<div class="pagination-container">
+					<div class="pagination-wrapper">
+						<div class="pagination-slide"><div class="item">1</div></div>
+						<div class="pagination-slide"><div class="item">2</div></div>
+						<div class="pagination-slide"><div class="item">3</div></div>
+						<div class="pagination-slide"><div class="item">4</div></div>
+						<div class="pagination-slide"><div class="item">5</div></div>
+						<div class="pagination-slide"><div class="item">6</div></div>
+					</div>
+				</div>
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			var loop = true;
+			
+			var paginationCont = document.getElementsByClassName('pagination-container')[0];
+			var paginationWrap = document.getElementsByClassName('pagination-wrapper')[0];
+			var paginations = Array.from(document.getElementsByClassName('pagination-slide'));
+			var timer1 = null;
+			var transitionurationD = 0.3;
+
+			var len = paginations.length;
+			var width = paginations[0].clientWidth;
+			// 修复最后一个不贴又侧的问题   -10 为最后一个   pagination-slide 的 padding-right 值
+			var maxWidth = width * len - paginationCont.clientWidth - 10;
+			var activeClassName = 'active';
+			paginations.forEach(function (dom, index) {
+				dom.onclick = function () {
+					swiper.slideTo(loop ? index + 1 : index);
+				}
+			})
+			
+			
+			var swiper = new Swiper('.swiper-container', {
+				nextButton: '.swiper-button-next',
+				prevButton: '.swiper-button-prev',
+				spaceBetween: 30,
+				loop: loop,
+				onSlideChangeStart: function(swiper){
+				  focusPaginations(swiper.activeIndex, loop);
+				}
+			})
+			
+			focusPaginations (0, false);
+			
+			function focusPaginations (index, loop) {
+				clearTimeout(timer1);
+				var contWidth = paginationCont.clientWidth;
+				var itemWidth = paginations[0].clientWidth;
+				
+				paginationWrap.style.transition = 'all ' + transitionurationD + 's ease';
+				
+				timer1 = setTimeout(function () {
+					paginationWrap.style.transition = 'none';
+				}, transitionurationD * 1000)
+				
+				var to = loop ? (index - 1) % len : index;
+				
+				to = to < 0 ? len + to : to;
+				
+				paginations.forEach(function (dom, index) {
+					if (index === to) {
+						dom.setAttribute('class', dom.className.replace(' ' + activeClassName, '') + ' ' + activeClassName);
+					} else {
+						dom.setAttribute('class', dom.className.replace(' ' + activeClassName, ''));
+					}
+				})
+				
+				to = (to-1) * width;
+				
+				var distence = to > 0 ? (to < maxWidth ? to : maxWidth) : 0;
+				
+				paginationWrap.style.transform = 'translate3d('+ (-distence) +'px,0,0)';
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+		</script>
+		
+	</body>
+</html>
