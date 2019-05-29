@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<style type="text/css">
+		div{
+			background-size: cover;
+		}
+	</style>
+	<body>
+		<button id="button">button</button>
+		<div id="status">
+			
+		</div>
+		<script type="text/javascript">
+			var DB = {
+				db: 'feed',
+				ver: 1.0,
+				desc: 'feedlist',
+				cap: 50 * 1024 * 1024
+			}
+			var db = window.openDatabase(DB.db, DB.ver, DB.desc, DB.cap, res => {console.log(res)})
+			
+			console.log(db);
+			
+			
+			db.transaction(function (tx) {  
+				tx.executeSql('CREATE TABLE IF NOT EXISTS FEEDLIST (id unique, log)');
+				tx.executeSql('INSERT INTO LOGS (id, log) VALUES (1, "{name: 11, age: 22}")');
+				tx.executeSql('INSERT INTO LOGS (id, log) VALUES (2, "www.runoob.com")');
+			});
+// 			db.transaction(function (tx) {
+// 			   tx.executeSql('SELECT * FROM LOGS', [], function (tx, results) {
+// 				  var len = results.rows.length, i;
+// 				  msg = "<p>查询记录条数: " + len + "</p>";
+// 				  document.querySelector('#status').innerHTML +=  msg;
+// 				
+// 				  for (i = 0; i < len; i++){
+// 					console.log(results.rows.item(i).log);
+// 				  }
+// 				
+// 			   }, null);
+// 			});
+			
+			document.getElementById('button').onclick = function () {
+				var obj = {
+					id: Math.random() * 1000 |0,
+					log: Math.random() * 1000 |0,
+				}
+				db.transaction(function (tx) {
+				
+					tx.executeSql('INSERT INTO LOGS (id, log) VALUES (?, ?)', [obj.id, obj.log]);
+				
+				});
+			}
+			
+		</script>
+	</body>
+</html>

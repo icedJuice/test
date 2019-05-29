@@ -5,50 +5,132 @@
 		<title></title>
 	</head>
 	<body>
+		<button type="button" id="btn">查询</button>
 		<script type="text/javascript">
+	var mydb = {
+		name:'firstDB',
+		version:8, //只能是整数，3.31--->会转成3
+		db:null,
+		store: null
+	};
+	// employee数据
+	var Employee= [
+			{
+				id:'lx001',
+				name:'lucas',
+				age:20
+			},
+			{
+				id:'lx002',
+				name:'lucy',
+				age:18
+			},
+			{
+				id:'lx003',
+				name:'mike',
+				age:22
+			},
+			{
+				id:'lx004',
+				name:'susan',
+				age:21
+			}
+		];
+	
+	createIndexDB(mydb, function (err, data) {
+		if (err) {return console.log(err)}
+		mydb.db = data;
+		addData(mydb.db, 'Employees');
+		
+		console.log(data);
+		// console.log(data, data.name, data.version, data.objectStoreNames );
+	})
+	
+	document.querySelector('#btn').onclick = function() {
+		console.log(mydb.db);
+		getDataByKey(mydb.db,'Employees', 'lx003', data => {
+			console.log(data);
+		});
+	}
+	
+	//添加数据
+	function addData(db,storename){
+		console.log(db,storename);
+		var transaction = db.transaction(storename,"readwrite");//首先获取事务
+
+		var store = transaction.objectStore(storename);//根据事务获取对应的storename获取我们新建数据库的store
+
+		for(var i = 0; i < Employee.length; i++) {//遍历我们的数据
+			store.add(Employee[i]);//add到store中
+		}
+	}
+	
+	function createIndexDB(DB, callback) {//根据数据库名称和数据库版本号来打开或者新建一个数据库
+		var version = version || 1;
+		var request = window.indexedDB.open(DB.name,DB.version);
+		console.log(request)
+		request.onerror = function(e) { //新建或打开数据失败的回调函数
+			console.log(e);
+			callback(e, null);
+		};
+
+		request.onsuccess = function(e) { //新建或打开数据库成功的回调
 			
-			var DBOpenRequest = window.indexedDB.open('test', 1);
-			var db;
-			console.log(DBOpenRequest);
-			var data = [
-			  {
-				  id: 0
-			    string:
-			      '第一批文字文本第一批文字文本第一批文字文本第一批文字文本第一批文字文本第一批文字文批文字文本第一批文字文本本',
-			    voice: 'audio/pet/test-fiveDays',
-			  },
-			  {
-				  id: 1
-			    string: '第二批文字文本',
-			    voice: 'audio/pet/test-fiveDays',
-			  },
-			  {
-				  id: 2
-			    string: '第三批文字文本',
-			    voice: 'audio/pet/test-fiveDays',
-			  },
-			];
-			
-			DBOpenRequest.onsuccess = function (event) {
-				// 存储数据结果
-				db = DBOpenRequest.result;
-				console.info('创建打开数据库成功');
-				
-				var objectStore = db.createObjectStore('test', {
-					keyPath: 'id',
-					autoIncrement: true//自增
-				});
-				
-				objectStore.createIndex('id', 'id', {
-					unique: true
-				});
-				objectStore.createIndex("numberIdIndex", "numberId", {
-					unique: false
-				});
-			};
-			
-			
-			
+			callback(null, e.target.result);
+		};
+		
+		request.onupgradeneeded = function(e) {
+			console.log('onupgradeneeded');
+			mydb.db = e.target.result;
+			if(!mydb.db.objectStoreNames.contains('Employees')){
+				var store = mydb.store = mydb.db.createObjectStore('Employees',{keyPath:'id'});
+				store.createIndex('nameIndex','name',{unique:false}); //创建name的索引
+				store.createIndex('ageIndex','age',{unique:false});//创建age的索引
+			}
+		}
+
+        console.log("db version change to" + version);
+	}
+	
+	
+	//根据id获取数据
+function getDataByKey(db,storename,id, cb){
+    var transaction = db.transaction(storename,'readwrite');//先获取事务
+    var store = transaction.objectStore(storename);//获取object store
+    var req = store.get(id); // 根据指定的keyPath的值查询 即id值
+    req.onsuccess = function(e) {
+        var employee = e.target.result;
+        cb(employee);
+    }
+}
+//利用索引来获取值
+function getDataByIndex(db,storename,indexType, indexName) {
+    var transaction = db.transaction(storename);//根据storename获取事务
+    var store = transaction.objectStore(storename); //storename为参数用事务获取store
+    var index = store.index(indexType);//使用index方法获取IDBIndex对象
+    index.get(indexName).onsuccess = function(e) {
+        var e = e.target.result;
+        console.log(e);
+    }
+}
+
+//同时也可以使用游标来获取值，结合索引
+function getDataByFetch(db, storename,indexType, indexName) {
+    var transaction = db.transaction(storename);
+    var store = transaction.objectStore(storename);
+    var index = store.index(indexType); //
+    var request = index.openCursor(IDBKeyRange.only(indexName)); //打开游标，得到一个请求；store打开的是哪个类型的索引，only中就是哪个索引的值
+    request.onsuccess = function(e) {
+        var cursor = e.target.result;
+        if(cursor) {
+            console.log(cursor.key)
+            var e = cursor.value;
+            console.log(e);
+            cursor.continue(); //游标下一位，没有会返回undefined
+        }
+    }
+}
 		</script>
+
 	</body>
 </html>
