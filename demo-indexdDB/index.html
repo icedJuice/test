@@ -4,9 +4,91 @@
 		<meta charset="utf-8">
 		<title></title>
 	</head>
+	<script src="./js/methods.js" type="text/javascript" charset="utf-8"></script>
 	<body>
 		<button type="button" id="btn">查询</button>
+		<button type="button" id="read">read</button>
+		
+		
 		<script type="text/javascript">
+			console.log(MyDb);
+			// c_ 开头 的 fk 相关 
+			const potions = {
+				db : {},
+				name:'FEED', //数据库名
+				version: 1,  // 数据库版本号
+				tableName:'test', //表名
+				keyPath:'id' , // 默认以id 为主键,可选
+				indexArr:[
+					{
+						indexName: 'feed_id',
+						unique: true,
+					},
+					{
+						indexName: 'created_at',
+						unique: false,
+					},
+					{
+						indexName: 'c_name',
+						unique: false,
+					},
+				]   // 索引数组
+			}
+			var DB = new MyDb(potions)
+			DB.init();
+			var data = {
+				id:Date.now(), 
+				feed_id: Date.now(),
+				created_at: Date.now(),
+				c_name: 'zhangsan',
+				data: {
+					c_adress: '北京市启明 B 606',
+					c_phone: '13099999999',
+					good_list: [
+						{
+							index: 1,
+							name: '小张',
+							drops: 'pipe',
+							Spec: '100*100',
+							unit: 'm2',
+							count: 3,
+							area: 100,
+							price: 100,
+							all_price: 300,
+							others: 'nothing'
+						}
+					]
+				}
+				
+			}
+			
+			document.querySelector('#btn').onclick = () => {
+				DB.addData(data, (err, res) => {
+					if(err) {
+						console.log('err', err);
+						return false;
+					}
+					console.log(res)
+				})
+				
+			}
+			document.querySelector('#read').onclick = () => {
+				DB.readAll((err, res) => {
+					if(err) {
+						console.log('err', err);
+						return false;
+					}
+					console.log(res)
+				})
+				
+			}
+			
+			
+			
+		</script>
+		
+		<script type="no-scrpit">
+
 	var mydb = {
 		name:'firstDB',
 		version:8, //只能是整数，3.31--->会转成3
