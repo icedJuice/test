@@ -1,34 +1,95 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-	<title>Document</title>
-	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
 </head>
+<style type="text/css">
+	html,body{
+		margin: 0;
+	}
+	.container{
+		width: 300px;
+		height: 300px;
+	}
+	#div{
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 300px;
+		height: 300px;
+		margin: 0 auto;
+	}
+	i{
+		position: absolute;
+		display: block;
+		background-color: #fff;
+	}
+	.dot{
+		width: 7px;
+		height: 7px;
+		border: 1px solid #dddddd;
+	}
+	.dot.left{left: -4px;}
+	.dot.top{top:-4px;}
+	.dot.right{right: -4px;}
+	.dot.bottom{bottom: -4px;}
+	
+	.line{background: #dddddd;}
+	.line.left{
+		left: 0;top:0;width: 1px;height: 100%;
+	}
+	.line.top{
+		left: 0;top:0;width: 100%;height: 1px;
+	}
+	.line.right{
+		right: 0;top:0;width: 1px;height: 100%;
+	}
+	.line.bottom{
+		left: 0;bottom:0;width: 100%;height: 1px;
+	}
+</style>
 <body>
+	
+	<div class="container">
+		<div id="div">
+			<i class="line left" id="left"></i>
+			<i class="line top" id="top"></i>
+			<i class="line right" id="right"></i>
+			<i class="line bottom" id="bottom"></i>
+			
+			<i class="dot left top" id="left-top"></i>
+			<i class="dot right top" id="right-top"></i>
+			<i class="dot left bottom" id="left-bottom"></i>
+			<i class="dot right bottom" id="right-bottom"></i>
+		</div>
+	</div>
+	
 	
 	<script type="text/javascript">
 		
-window.onload = function (){
-	$.ajax({
-		type:'post',
-		url: 'https://api.ono.chat/api/v1/feed/policy',
-		data:{
-			token: '11111'
+		
+		const positons = {
+			left: 0,
+			top: 0,
+			width: 300,
+			height: 300,
 		}
-	}).done(function (data){
-		console.log(data)
-	})
-	
-	
-}
 		
+		const div = document.querySelector('#div');
 		
+		div.addEventListener('mousedown', handleStart, false);
 		
-		
-		
+		function handleStart(event) {
+			
+			
+			
+			
+			div.addEventListener('mousemove', handleStart, false);
+			div.addEventListener('mousedown', handleStart, false);
+		}
 		
 	</script>
 	
